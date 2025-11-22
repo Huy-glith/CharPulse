@@ -41,7 +41,7 @@ cd CharPulse
 ```bash
 chmod +x install.sh
 ```
-4. **Build and install**
+4. **Build and install:**
 ```bash
 sudo ./install.sh
 ```
