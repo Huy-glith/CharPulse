@@ -45,11 +45,7 @@ chmod +x install.sh
 ```bash
 sudo ./install.sh
 ```
-5. **Set device permissions (optional):**
-```bash
-sudo chmod 666 /dev/charpulse
-```
-4. **Verify the module is loaded:**
+5. **Verify the module is loaded:**
 ```bash
 lsmod | grep charpulse
 ```
