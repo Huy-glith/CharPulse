@@ -92,6 +92,9 @@ sudo rm /etc/modules-load.d/charpulse.conf
 sudo rm /lib/modules/$(uname -r)/extra/charpulse.ko
 ```
 ```bash
+sudo rm /etc/udev/rules.d/99-charpulse.rules
+```
+```bash
 sudo depmod -a
 ```
 
