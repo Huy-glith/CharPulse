@@ -37,8 +37,8 @@ if [ -e "${DEV_NODE}" ]; then
     sudo chmod 0666 "${DEV_NODE}"
     echo "[*] Creating udev rule for permanent permissions..."
     sudo tee /etc/udev/rules.d/99-${MODULE_BASENAME}.rules > /dev/null <<EOF
-    KERNEL=="${MODULE_BASENAME}", MODE="0666"
-    EOF
+KERNEL=="${MODULE_BASENAME}", MODE="0666"
+EOF
 
     echo "[*] Reloading udev rules..."
     sudo udevadm control --reload
