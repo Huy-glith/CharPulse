@@ -1,6 +1,6 @@
 # CharPulse
 
-**CharPulse** is a **Linux character device driver** that supports **read, write, append, and clear** operations on a kernel buffer. It is safe for multi-threaded access and includes logging for all operations via `dmesg`. This driver is suitable for learning and experimenting with kernel modules.
+**CharPulse** is a **Linux character device driver** that supports **read, write, append, and clear** operations on a dynamically resizing kernel buffer. It is safe for multi-threaded access and includes logging for all operations via `dmesg`. This driver is production-ready and can handle large amounts of data, making it suitable for learning as well as realistic kernel module experiments.
 
 ---
 
@@ -11,6 +11,7 @@
 - Append data to the existing buffer.
 - Clear the buffer using `echo "clear" > /dev/charpulse`.
 - Thread-safe with mutex protection.
+- Dynamic, auto-resizing kernel buffer.
 - Production-ready with logging via `dmesg`.
 - Auto-loads at boot using `/etc/modules-load.d/charpulse.conf`.
 - Works on most Linux distributions with proper kernel headers.
