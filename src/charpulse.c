@@ -74,6 +74,13 @@ ssize_t cp_write(struct file *file, const char __user *in, size_t len, loff_t *o
             if (kbuf[len - 1] == '\r') kbuf[len - 1] = '\0';
 
             if (strcmp(kbuf, "clear") == 0) {
+                kfree(cp_buf);
+                buffer_size = CHARPULSE_BUF;
+                cp_buf = kmalloc(buffer_size, GFP_KERNEL);
+                if (!cp_buf) {
+                   mutex_unlock(&cp_lock);
+                   return -ENOMEM;
+                }
                 memset(cp_buf, 0, buffer_size);
                 cp_len = 0;
                 *off = 0;
