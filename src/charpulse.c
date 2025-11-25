@@ -95,6 +95,7 @@ ssize_t cp_write(struct file *file, const char __user *in, size_t len, loff_t *o
                 memset(cp_buf, 0, buffer_size);
                 cp_len = 0;
                 *off = 0;
+                buffer_capacity = buffer_size;
                 clear_count++;
                 mutex_unlock(&cp_lock);
                 printk(KERN_INFO "charpulse: buffer cleared\n");
