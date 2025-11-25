@@ -2,7 +2,7 @@
 
 **CharPulse** is a Linux character device driver that supports **read**, **write**, **append**, and **clear** operations on a **dynamically resizing kernel buffer**. It is safe for **multi-threaded access** and includes **logging for all operations via `dmesg`**.  
 
-This driver also provides **sysfs support** to monitor and manage buffer operations, including **read_count**, **write_count**, **clear_count**, **current_data_size**, and **reset_counts** to reset all counters.  
+This driver also provides **sysfs support** to monitor and manage buffer operations, including **read_count**, **write_count**, **clear_count**, **current_data_size**, **last_write_size**, **last_read_size**, **buffer_usage_percentage** and **reset_counts** to reset all counters.  
 
 This driver is **production-ready** and can handle **large amounts of data**, making it suitable for **learning** as well as **realistic kernel module experiments**.
 
@@ -23,6 +23,9 @@ This driver is **production-ready** and can handle **large amounts of data**, ma
   - `write_count` – number of times data has been written
   - `clear_count` – number of times the buffer has been cleared
   - `current_data_size` – current size of the data in the buffer
+  - `last_write_size` – size of the last write operation
+  - `last_read_size` – size of the last read operation
+  - `buffer_usage_percentage` – percentage of the buffer currently in use
   - `reset_counts` – write `1` to reset read, write, and clear counters
 - Works on most Linux distributions with proper kernel headers.
 
@@ -110,6 +113,24 @@ cat /sys/kernel/charpulse_stats/clear_count
 Check the current size of data stored in the buffer (in bytes):
 ```bash
 cat /sys/kernel/charpulse_stats/current_data_size
+```
+**Last Write Size**
+
+Check the size of the last write operation (in bytes):
+```bash
+cat /sys/kernel/charpulse_stats/last_write_size
+```
+**Last Read Size**
+
+Check the size of the last read operation (in bytes):
+```bash
+cat /sys/kernel/charpulse_stats/last_read_size
+```
+**Buffer Usage Percentage**
+
+Check the current buffer usage as a percentage:
+```bash
+cat /sys/kernel/charpulse_stats/buffer_usage_percentage
 ```
 **Reset Counts**
 
