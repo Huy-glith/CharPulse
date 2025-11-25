@@ -17,6 +17,8 @@ static DEFINE_MUTEX(cp_lock);
 static u64 read_count = 0;
 static u64 write_count = 0;
 static u64 clear_count = 0;
+static size_t last_write_size = 0;
+static size_t last_read_size = 0;
 
 static struct kobject *cp_kobj;
 
@@ -58,6 +60,7 @@ ssize_t cp_read(struct file *file, char __user *out, size_t len, loff_t *off) {
 
     *off += len;
     ret = len;
+    last_read_size = len;
     read_count++;
 
 out:
@@ -131,6 +134,7 @@ ssize_t cp_write(struct file *file, const char __user *in, size_t len, loff_t *o
 
     *off = pos;
     ret = len;
+    last_write_size = len;
     write_count++;
 
 out:
@@ -179,6 +183,20 @@ static ssize_t current_data_size_show(struct kobject *kobj, struct kobj_attribut
     return sprintf(buf, "%zu\n", cp_len);
 }
 
+static ssize_t last_write_size_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf) {
+    return sprintf(buf, "%zu\n", last_write_size);
+}
+
+static ssize_t last_read_size_show(struct kobject *kobject, struct kobj_attribute *attr, char *buf) {
+    return sprintf(buf, "%zu\n", last_read_size);
+}
+
+static ssize_t buffer_usage_percentage_show(struct kobject *kobject, struct kobj_attribute *attr, char *buf) {
+    if (buffer_size == 0)
+        return sprintf(buf, "0\n");
+    return sprintf(buf, "%zu\n", (cp_len * 100) / buffer_size);
+}
+
 static ssize_t reset_counts_store(struct kobject *kobj, struct kobj_attribute *attr, const char *buf, size_t count) {
     read_count = 0;
     write_count = 0;
@@ -190,6 +208,9 @@ static struct kobj_attribute read_count_attr = __ATTR_RO(read_count);
 static struct kobj_attribute write_count_attr = __ATTR_RO(write_count);
 static struct kobj_attribute clear_count_attr = __ATTR_RO(clear_count);
 static struct kobj_attribute current_data_size_attr = __ATTR_RO(current_data_size);
+static struct kobj_attribute last_write_size_attr = __ATTR_RO(last_write_size);
+static struct kobj_attribute last_read_size_attr  = __ATTR_RO(last_read_size);
+static struct kobj_attribute buffer_usage_percentage_attr = __ATTR_RO(buffer_usage_percentage);
 static struct kobj_attribute reset_counts_attr = __ATTR_WO(reset_counts);
 
 static struct attribute *cp_attrs[] = {
@@ -197,6 +218,9 @@ static struct attribute *cp_attrs[] = {
     &write_count_attr.attr,
     &clear_count_attr.attr,
     &current_data_size_attr.attr,
+    &last_write_size_attr.attr,
+    &last_read_size_attr.attr,
+    &buffer_usage_percentage_attr.attr,
     &reset_counts_attr.attr,
     NULL,
 };
