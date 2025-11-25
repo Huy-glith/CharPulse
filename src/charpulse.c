@@ -12,6 +12,7 @@ static struct device *cp_device;
 static char *cp_buf;
 static size_t cp_len = 0;
 static size_t buffer_size = CHARPULSE_BUF;
+static size_t buffer_capacity;
 static DEFINE_MUTEX(cp_lock);
 
 static u64 read_count = 0;
@@ -116,11 +117,12 @@ ssize_t cp_write(struct file *file, const char __user *in, size_t len, loff_t *o
         size_t new_size = max(buffer_size * 2, pos + len);
         char *new_buf = krealloc(cp_buf, new_size, GFP_KERNEL);
         if (!new_buf) {
-            mutex_unlock(&cp_lock);
-            return -ENOMEM;
+           mutex_unlock(&cp_lock);
+           return -ENOMEM;
         }
         cp_buf = new_buf;
         buffer_size = new_size;
+        buffer_capacity = new_size;
     }
 
     if (copy_from_user(cp_buf + pos, in, len)) {
@@ -191,10 +193,30 @@ static ssize_t last_read_size_show(struct kobject *kobject, struct kobj_attribut
     return sprintf(buf, "%zu\n", last_read_size);
 }
 
-static ssize_t buffer_usage_percentage_show(struct kobject *kobject, struct kobj_attribute *attr, char *buf) {
-    if (buffer_size == 0)
-        return sprintf(buf, "0\n");
-    return sprintf(buf, "%zu\n", (cp_len * 100) / buffer_size);
+static ssize_t buffer_usage_percentage_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf) {
+    size_t base_capacity;
+    u64 usage_scaled;
+    u64 percent_int;
+    u64 percent_dec;
+
+    if (mutex_lock_interruptible(&cp_lock))
+        return -EINTR;
+
+    base_capacity = buffer_capacity;
+
+    if (base_capacity == 0) {
+        mutex_unlock(&cp_lock);
+        return sprintf(buf, "0.00\n");
+    }
+
+    usage_scaled = (u64)cp_len * 10000ULL / base_capacity;
+
+    percent_int = usage_scaled / 100;
+    percent_dec = usage_scaled % 100;
+
+    mutex_unlock(&cp_lock);
+
+    return sprintf(buf, "%llu.%02llu\n", percent_int, percent_dec);
 }
 
 static ssize_t reset_counts_store(struct kobject *kobj, struct kobj_attribute *attr, const char *buf, size_t count) {
@@ -275,6 +297,7 @@ int cp_init(void) {
     }
     memset(cp_buf, 0, buffer_size);
     cp_len = 0;
+    buffer_capacity = buffer_size;
 
     cp_kobj = kobject_create_and_add("charpulse_stats", kernel_kobj);
     if (!cp_kobj)
@@ -306,4 +329,3 @@ module_exit(cp_exit);
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Sreeraj S Kurup");
 MODULE_DESCRIPTION("CharPulse character device driver with read, write, append, clear, dynamic buffer resizing, and sysfs stats support");
-
