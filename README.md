@@ -33,11 +33,16 @@ This driver is **production-ready** and can handle **large amounts of data**, ma
 
 ## Requirements
 
-- Linux kernel 6.14 or newer  
-- GCC 13 or newer, or the GCC version used to build your running kernel  
-- Make  
-- Linux kernel headers for the running kernel (usually preinstalled on Ubuntu)
-> **Note:** Tested on Linux kernel 6.14.0-35-generic (Linux kernel 6.14) on Ubuntu 24.04.3 LTS
+- **Linux kernel 6.14 or newer**  
+  - Tested on **6.14, 6.15, 6.16, 6.17, and 6.18** on Ubuntu 24.04.3 LTS
+- **GCC 13 or newer**, or the GCC version used to build your running kernel  
+  - **For mainline kernels 6.17 and 6.18, GCC 15 is required**  
+  - **GCC 15 must be accessible as `/usr/bin/gcc-15`** (symlinked if installed elsewhere)  
+    - Simply naming it `gcc` is not enough
+- **Make**
+- **Linux kernel headers** for the running kernel (usually preinstalled on Ubuntu)
+
+**Note:** The `/usr/bin/gcc-15` symlink is mandatory for module compilation on mainline kernels (6.17 and 6.18). Without it, you may get compilation errors.
 
 ---
   
