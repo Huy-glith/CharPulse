@@ -171,9 +171,6 @@ To use the **IOCTL interface** of CharPulse from userspace, you need the `charpu
 ```
 This header defines all IOCTL commands and structures required to interact with the CharPulse device from userspace.
 
-**Note:** The `CP_SET_MAX_SIZE` IOCTL only updates the logical buffer capacity (`buffer_capacity`) used for usage calculations.  
-It does **not** change the actual allocated buffer or prevent dynamic resizing. Writes that exceed the current memory will still expand the buffer automatically
-
 **IOCTL Example Program:**
 ```c
 // ioctl_example.c
