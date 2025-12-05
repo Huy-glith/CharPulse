@@ -154,6 +154,156 @@ Reset read, write, and clear counts to zero (requires sudo/root):
 sudo sh -c 'echo 1 > /sys/kernel/charpulse_stats/reset_counts'
 ```
 
+## IOCTL Usage
+
+To use the **IOCTL interface** of CharPulse from userspace, you need the `charpulse_user.h` header.
+
+**Steps:**
+
+1. Download or copy the file `charpulse_user.h` from the repository’s `userspace` folder.
+ 
+2. Save it in your local project directory.
+ 
+3. Include it in your program as shown below:
+
+```c
+#include "charpulse_user.h"
+```
+This header defines all IOCTL commands and structures required to interact with the CharPulse device from userspace.
+
+**IOCTL Example Program:**
+```c
+// ioctl_example.c
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <inttypes.h>
+#include "charpulse_user.h"  // Userspace IOCTL definitions
+
+int main(void) {
+    // Open the CharPulse device for read and write
+    int fd = open("/dev/charpulse", O_RDWR);
+    if (fd < 0) {
+        perror("Failed to open /dev/charpulse");
+        return 1;
+    }
+
+    // ------------------------------
+    // 1. Get device statistics
+    // ------------------------------
+    struct cp_stats stats;
+    if (ioctl(fd, CP_GET_STATS, &stats) == 0) {
+        // Display statistics
+        printf("Device stats:\n");
+        printf("  Read Count      : %" PRIu64 "\n", stats.read_count);
+        printf("  Write Count     : %" PRIu64 "\n", stats.write_count);
+        printf("  Clear Count     : %" PRIu64 "\n", stats.clear_count);
+        printf("  Last Read Size  : %zu bytes\n", stats.last_read_size);
+        printf("  Last Write Size : %zu bytes\n", stats.last_write_size);
+        printf("  Current Data    : %zu bytes\n", stats.current_data_size);
+    } else {
+        perror("CP_GET_STATS failed");
+    }
+
+    // ------------------------------
+    // 2. Get buffer usage percentage
+    // ------------------------------
+    char usage[16] = {0};
+    if (ioctl(fd, CP_GET_BUFFER_USAGE, usage) == 0) {
+        printf("Current buffer usage: %s%%\n", usage);
+    } else {
+        perror("CP_GET_BUFFER_USAGE failed");
+    }
+
+    // ------------------------------
+    // 3. Set a new maximum buffer size
+    // ------------------------------
+    size_t new_size = 2048; // new buffer max size in bytes
+    if (ioctl(fd, CP_SET_MAX_SIZE, &new_size) == 0) {
+        printf("Buffer maximum size successfully set to %zu bytes\n", new_size);
+    } else {
+        perror("CP_SET_MAX_SIZE failed");
+    }
+
+    // ------------------------------
+    // 4. Clear the buffer
+    // ------------------------------
+    if (ioctl(fd, CP_CLEAR_BUFFER) == 0) {
+        printf("Buffer has been cleared successfully via IOCTL\n");
+    } else {
+        perror("CP_CLEAR_BUFFER failed");
+    }
+
+    // Close the device
+    close(fd);
+    return 0;
+}
+```
+
+### Poll Usage
+
+**Poll Example Program**
+
+```c
+// poll_example.c
+// Developer: Sreeraj
+// GitHub: https://github.com/s-r-e-e-r-a-j
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <poll.h>
+#include <string.h>
+
+int main(void)
+{
+    // Open the device file in non-blocking mode.
+    // Non-blocking mode prevents the program from getting stuck on read().
+    int fd = open("/dev/charpulse", O_RDWR | O_NONBLOCK);
+    if (fd < 0) {
+        perror("open");       // Print error if the device cannot be opened
+        return 1;
+    }
+
+    printf("Waiting for data using poll()...\n");
+
+    // pollfd structure tells poll() what we want to monitor.
+    struct pollfd pfd;
+    pfd.fd = fd;              // File descriptor of /dev/charpulse
+    pfd.events = POLLIN;      // We want to wait until the device has data to read
+
+    // poll() waits up to 5000ms (5 seconds) for the device to become readable.
+    int ret = poll(&pfd, 1, 5000);
+
+    if (ret == 0) {
+        // poll() returns 0 when the timeout is reached without any event.
+        printf("poll(): timeout — no data available\n");
+    } 
+    else if (ret < 0) {
+        // If something went wrong during poll()
+        perror("poll");
+    }
+    else if (pfd.revents & POLLIN) {
+        // POLLIN means the device has data ready to be read.
+        printf("poll(): data is available to read!\n");
+
+        char buf[256] = {0};          // Buffer to store the incoming data
+        ssize_t r = read(fd, buf, sizeof(buf) - 1);
+
+        if (r > 0)
+            printf("Read (%zd bytes): %s\n", r, buf);   // Print what we read
+        else
+            perror("read");             // Read failed
+    }
+
+    close(fd);     // Close the device file
+    return 0;
+}
+```
 ---
 
 ## Uninstallation
