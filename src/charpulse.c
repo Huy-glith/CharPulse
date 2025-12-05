@@ -217,19 +217,6 @@ long cp_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
             break;
         }
 
-        case CP_SET_MAX_SIZE: {
-            size_t new_size;
-            if (copy_from_user(&new_size, (size_t __user *)arg, sizeof(new_size))) {
-                ret = -EFAULT;
-                break;
-            }
-            if (new_size >= cp_len)
-                buffer_capacity = new_size;
-            else
-                ret = -EINVAL;
-            break;
-        }
-
         case CP_GET_BUFFER_USAGE: {
              char buf[16];
              size_t len;
