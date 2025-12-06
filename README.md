@@ -76,10 +76,10 @@ sudo ./install.sh
 ```
 5. **Verify the module is loaded:**
 ```bash
-lsmod | grep charpulse
+sudo lsmod | grep charpulse
 ```
 ```bash
-dmesg | tail
+sudo dmesg | tail
 ```
 
 ---
