@@ -231,12 +231,42 @@ int main(void) {
     }
 
     // ------------------------------
-    // 4. Clear the buffer
+    // 3. Clear the buffer
     // ------------------------------
     if (ioctl(fd, CP_CLEAR_BUFFER) == 0) {
         printf("Buffer has been cleared successfully via IOCTL\n");
     } else {
         perror("CP_CLEAR_BUFFER failed");
+    }
+
+    // ------------------------------
+    // 4. Get the current maximum buffer size
+    // ------------------------------
+    unsigned long max_buf = 0;
+    if (ioctl(fd, CP_GET_MAXBUF, &max_buf) == 0) {
+        printf("Current maximum buffer size: %lu bytes\n", max_buf);
+    } else {
+        perror("CP_GET_MAXBUF failed");
+    }
+
+    // ------------------------------
+    // 5. Set a new maximum buffer size
+    // ------------------------------
+    max_buf = 32 * 1024 * 1024;  // Set new max buffer size to 32 MB
+    if (ioctl(fd, CP_SET_MAXBUF, &max_buf) == 0) {
+        printf("Maximum buffer size set to: %lu bytes via IOCTL\n", max_buf);
+    } else {
+        perror("CP_SET_MAXBUF failed");
+    }
+
+    // ------------------------------
+    // 6. Verify the new maximum buffer size
+    // ------------------------------
+    max_buf = 0;
+    if (ioctl(fd, CP_GET_MAXBUF, &max_buf) == 0) {
+        printf("Verified maximum buffer size: %lu bytes\n", max_buf);
+    } else {
+        perror("CP_GET_MAXBUF failed");
     }
 
     // Close the device
